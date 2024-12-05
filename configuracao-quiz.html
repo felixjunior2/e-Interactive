@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuração do Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        #quizForm {
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .pergunta {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .opcoes {
+            margin-top: 10px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .remover-pergunta, .adicionar-opcao {
+            background-color: #f44336;
+            font-size: 0.8em;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Configuração do Quiz</h1>
+    <form id="quizForm">
+        <label for="titulo">Título do Quiz:</label>
+        <input type="text" id="titulo" name="titulo" required>
+        
+        <div id="perguntas"></div>
+        
+        <button type="button" id="adicionarPergunta">Adicionar Pergunta</button>
+        <button type="submit">Salvar Quiz</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('quizForm');
+            const perguntasContainer = document.getElementById('perguntas');
+            const adicionarPerguntaBtn = document.getElementById('adicionarPergunta');
+
+            // Template para perguntas de múltipla escolha
+            function criarOpcaoMultiplaEscolha(indice = 0) {
+                return `
+                    <div class="opcao">
+                        <input type="text" name="opcao_${indice}" placeholder="Opção ${indice + 1}" required>
+                        <input type="radio" name="resposta_correta" value="${indice}" required> Resposta Correta
+                    </div>
+                `;
+            }
+
+            // Função para adicionar pergunta
+            function adicionarPergunta() {
+                const perguntaDiv = document.createElement('div');
+                perguntaDiv.classList.add('pergunta');
+                
+                const totalPerguntas = perguntasContainer.children.length;
+                
+                perguntaDiv.innerHTML = `
+                    <button type="button" class="remover-pergunta">Remover Pergunta</button>
+                    <label>Texto da Pergunta:</label>
+                    <input type="text" name="pergunta_${totalPerguntas}" required>
+                    
+                    <label>Tipo de Pergunta:</label>
+                    <select name="tipo_${totalPerguntas}" class="tipo-pergunta">
+                        <option value="multiple_choice">Múltipla Escolha</option>
+                        <option value="true_false">Verdadeiro ou Falso</option>
+                        <option value="open">Pergunta Aberta</option>
+                    </select>
+                    
+                    <div class="opcoes">
+                        ${criarOpcaoMultiplaEscolha(0)}
+                        ${criarOpcaoMultiplaEscolha(1)}
+                        ${criarOpcaoMultiplaEscolha(2)}
+                        ${criarOpcaoMultiplaEscolha(3)}
+                    </div>
+                `;
+
+                // Adicionar evento para remover pergunta
+                perguntaDiv.querySelector('.remover-pergunta').addEventListener('click', () => {
+                    perguntasContainer.removeChild(perguntaDiv);
+                });
+
+                // Adicionar eventos de mudança de tipo de pergunta
+                const tipoSelect = perguntaDiv.querySelector('.tipo-pergunta');
+                const opcoesContainer = perguntaDiv.querySelector('.opcoes');
+                
+                tipoSelect.addEventListener('change', (e) => {
+                    switch(e.target.value) {
+                        case 'multiple_choice':
+                            opcoesContainer.innerHTML = `
+                                ${criarOpcaoMultiplaEscolha(0)}
+                                ${criarOpcaoMultiplaEscolha(1)}
+                                ${criarOpcaoMultiplaEscolha(2)}
+                                ${criarOpcaoMultiplaEscolha(3)}
+                            `;
+                            break;
+                        case 'true_false':
+                            opcoesContainer.innerHTML = `
+                                <div>
+                                    <input type="radio" name="resposta_correta" value="true" required> Verdadeiro
+                                    <input type="radio" name="resposta_correta" value="false" required> Falso
+                                </div>
+                            `;
+                            break;
+                        case 'open':
+                            opcoesContainer.innerHTML = `
+                                <textarea name="resposta_aberta" placeholder="Critérios para resposta aberta" rows="3"></textarea>
+                            `;
+                            break;
+                    }
+                });
+
+                perguntasContainer.appendChild(perguntaDiv);
+            }
+
+            // Adicionar primeira pergunta ao carregar
+            adicionarPergunta();
+
+            // Evento para adicionar mais perguntas
+            adicionarPerguntaBtn.addEventListener('click', adicionarPergunta);
+
+            // Salvar quiz
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const quizData = {
+                    titulo: formData.get('titulo'),
+                    perguntas: []
+                };
+
+                // Processar perguntas
+                perguntasContainer.querySelectorAll('.pergunta').forEach((perguntaEl, index) => {
+                    const pergunta = {
+                        texto: formData.get(`pergunta_${index}`),
+                        tipo: formData.get(`tipo_${index}`),
+                    };
+
+                    switch(pergunta.tipo) {
+                        case 'multiple_choice':
+                            pergunta.opcoes = [
+                                formData.get(`opcao_0`),
+                                formData.get(`opcao_1`),
+                                formData.get(`opcao_2`),
+                                formData.get(`opcao_3`)
+                            ];
+                            pergunta.respostaCorreta = formData.get('resposta_correta');
+                            break;
+                        case 'true_false':
+                            pergunta.respostaCorreta = formData.get('resposta_correta');
+                            break;
+                        case 'open':
+                            pergunta.criterios = formData.get('resposta_aberta');
+                            break;
+                    }
+
+                    quizData.perguntas.push(pergunta);
+                });
+
+                // Salvar ou enviar dados (aqui você pode adicionar lógica para enviar para um backend)
+                console.log(JSON.stringify(quizData, null, 2));
+                localStorage.setItem('quizConfig', JSON.stringify(quizData));
+                alert('Quiz salvo com sucesso!');
+            });
+        });
+    </script>
+</body>
+</html>
