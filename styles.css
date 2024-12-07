@@ -1,29 +1,29 @@
 body {
     font-family: Arial, sans-serif;
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
     line-height: 1.6;
 }
-
 #quizForm {
     background-color: #f4f4f4;
     padding: 20px;
     border-radius: 8px;
 }
-
-.pergunta {
+.secao-configuracao {
     background-color: #ffffff;
     border: 1px solid #ddd;
     margin-bottom: 15px;
     padding: 15px;
     border-radius: 5px;
 }
-
-.opcoes {
-    margin-top: 10px;
+.pergunta {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 5px;
 }
-
 input, select, textarea {
     width: 100%;
     padding: 8px;
@@ -31,23 +31,25 @@ input, select, textarea {
     border: 1px solid #ddd;
     border-radius: 4px;
 }
-
 button {
     background-color: #4CAF50;
     color: white;
     border: none;
     padding: 10px 15px;
-    margin: 10px 0;
+    margin: 10px 5px;
     border-radius: 4px;
     cursor: pointer;
 }
-
 button:hover {
     background-color: #45a049;
 }
-
-.remover-pergunta, .adicionar-opcao {
+.remover-botao {
     background-color: #f44336;
     font-size: 0.8em;
-    padding: 5px 10px;
+}
+.config-linha {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 }
