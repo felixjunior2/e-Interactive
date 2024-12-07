@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('quizForm');
-    const perguntasContainer = document.getElementById('perguntas');
-    const adicionarPerguntaBtn = document.getElementById('adicionarPergunta');
+    const perguntasContainer = document.getElementById('perguntas-container');
+    const adicionarPerguntaBtn = document.getElementById('adicionar-pergunta');
 
-    function criarOpcaoMultiplaEscolha(indice = 0) {
+    function criarOpcoesMultiplaEscolha(indice = 0) {
         return `
-            <div class="opcao">
+            <div class="opcao-multipla-escolha">
                 <input type="text" name="opcao_${indice}" placeholder="Opção ${indice + 1}" required>
                 <input type="radio" name="resposta_correta" value="${indice}" required> Resposta Correta
             </div>
@@ -19,40 +19,46 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalPerguntas = perguntasContainer.children.length;
         
         perguntaDiv.innerHTML = `
-            <button type="button" class="remover-pergunta">Remover Pergunta</button>
-            <label>Texto da Pergunta:</label>
-            <input type="text" name="pergunta_${totalPerguntas}" required>
+            <button type="button" class="remover-botao">Remover Pergunta</button>
             
-            <label>Tipo de Pergunta:</label>
-            <select name="tipo_${totalPerguntas}" class="tipo-pergunta">
-                <option value="multiple_choice">Múltipla Escolha</option>
-                <option value="true_false">Verdadeiro ou Falso</option>
-                <option value="open">Pergunta Aberta</option>
-            </select>
+            <div class="config-linha">
+                <label>Texto da Pergunta:</label>
+                <input type="text" name="pergunta_texto_${totalPerguntas}" required>
+            </div>
             
-            <div class="opcoes">
-                ${criarOpcaoMultiplaEscolha(0)}
-                ${criarOpcaoMultiplaEscolha(1)}
-                ${criarOpcaoMultiplaEscolha(2)}
-                ${criarOpcaoMultiplaEscolha(3)}
+            <div class="config-linha">
+                <label>Tipo de Pergunta:</label>
+                <select name="pergunta_tipo_${totalPerguntas}" class="tipo-pergunta">
+                    <option value="multiple_choice">Múltipla Escolha</option>
+                    <option value="true_false">Verdadeiro ou Falso</option>
+                    <option value="open">Pergunta Aberta</option>
+                </select>
+            </div>
+            
+            <div class="opcoes-container">
+                ${criarOpcoesMultiplaEscolha(0)}
+                ${criarOpcoesMultiplaEscolha(1)}
+                ${criarOpcoesMultiplaEscolha(2)}
+                ${criarOpcoesMultiplaEscolha(3)}
             </div>
         `;
 
-        perguntaDiv.querySelector('.remover-pergunta').addEventListener('click', () => {
+        const removerBtn = perguntaDiv.querySelector('.remover-botao');
+        removerBtn.addEventListener('click', () => {
             perguntasContainer.removeChild(perguntaDiv);
         });
 
         const tipoSelect = perguntaDiv.querySelector('.tipo-pergunta');
-        const opcoesContainer = perguntaDiv.querySelector('.opcoes');
+        const opcoesContainer = perguntaDiv.querySelector('.opcoes-container');
         
         tipoSelect.addEventListener('change', (e) => {
             switch(e.target.value) {
                 case 'multiple_choice':
                     opcoesContainer.innerHTML = `
-                        ${criarOpcaoMultiplaEscolha(0)}
-                        ${criarOpcaoMultiplaEscolha(1)}
-                        ${criarOpcaoMultiplaEscolha(2)}
-                        ${criarOpcaoMultiplaEscolha(3)}
+                        ${criarOpcoesMultiplaEscolha(0)}
+                        ${criarOpcoesMultiplaEscolha(1)}
+                        ${criarOpcoesMultiplaEscolha(2)}
+                        ${criarOpcoesMultiplaEscolha(3)}
                     `;
                     break;
                 case 'true_false':
@@ -65,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     break;
                 case 'open':
                     opcoesContainer.innerHTML = `
-                        <textarea name="resposta_aberta" placeholder="Critérios para resposta aberta" rows="3"></textarea>
+                        <textarea name="criterios_resposta" placeholder="Critérios para resposta aberta" rows="3"></textarea>
                     `;
                     break;
             }
@@ -80,24 +86,59 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         const formData = new FormData(form);
-        const quizData = {
-            titulo: formData.get('titulo'),
-            perguntas: []
+        
+        const quizConfig = {
+            quiz: {
+                titulo: formData.get('quiz-titulo'),
+                perguntas: []
+            },
+            configuracao: {
+                parametros: [
+                    {
+                        id: 'quiz_title',
+                        value: formData.get('quiz-titulo')
+                    },
+                    {
+                        id: 'question_count',
+                        value: parseInt(formData.get('numero-questoes'))
+                    },
+                    {
+                        id: 'time_limit',
+                        value: parseInt(formData.get('tempo-limite'))
+                    },
+                    {
+                        id: 'question_types',
+                        value: Array.from(formData.getAll('tipos-questoes'))
+                    },
+                    {
+                        id: 'passing_score',
+                        value: parseFloat(formData.get('pontuacao-minima'))
+                    }
+                ]
+            },
+            user_url_info: {
+                deploymentConfiguration: {
+                    attemptLimit: parseInt(formData.get('tentativas-limite')),
+                    timeLimit: parseInt(formData.get('tempo-limite')) * 60,
+                    startDate: formData.get('data-inicio'),
+                    endDate: formData.get('data-fim')
+                }
+            }
         };
 
         perguntasContainer.querySelectorAll('.pergunta').forEach((perguntaEl, index) => {
             const pergunta = {
-                texto: formData.get(`pergunta_${index}`),
-                tipo: formData.get(`tipo_${index}`),
+                texto: formData.get(`pergunta_texto_${index}`),
+                tipo: formData.get(`pergunta_tipo_${index}`)
             };
 
             switch(pergunta.tipo) {
                 case 'multiple_choice':
                     pergunta.opcoes = [
-                        formData.get(`opcao_0`),
-                        formData.get(`opcao_1`),
-                        formData.get(`opcao_2`),
-                        formData.get(`opcao_3`)
+                        formData.get('opcao_0'),
+                        formData.get('opcao_1'),
+                        formData.get('opcao_2'),
+                        formData.get('opcao_3')
                     ];
                     pergunta.respostaCorreta = formData.get('resposta_correta');
                     break;
@@ -105,15 +146,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     pergunta.respostaCorreta = formData.get('resposta_correta');
                     break;
                 case 'open':
-                    pergunta.criterios = formData.get('resposta_aberta');
+                    pergunta.criterios = formData.get('criterios_resposta');
                     break;
             }
 
-            quizData.perguntas.push(pergunta);
+            quizConfig.quiz.perguntas.push(pergunta);
         });
 
-        console.log(JSON.stringify(quizData, null, 2));
-        localStorage.setItem('quizConfig', JSON.stringify(quizData));
-        alert('Quiz salvo com sucesso!');
+        console.log(JSON.stringify(quizConfig, null, 2));
+        localStorage.setItem('quizConfig', JSON.stringify(quizConfig));
+        alert('Configuração do Quiz salva com sucesso!');
     });
 });
