@@ -1,0 +1,67 @@
+
+{
+    "quiz": {
+      "titulo": "Quiz Title",
+      "perguntas": [
+        {
+          "texto": "Question Text",
+          "tipo": "multiple_choice/true_false/open",
+          "opcoes": ["Option 1", "Option 2", "Option 3", "Option 4"],
+          "respostaCorreta": "...",
+          "criterios": "..."
+        }
+      ]
+    },
+    "configuracao": {
+      "parametros": [
+        {
+          "id": "quiz_title",
+          "name": "Título do Quiz",
+          "type": "string",
+          "required": true,
+          "maxLength": 100,
+          "defaultValue": ""
+        },
+        {
+          "id": "question_count",
+          "name": "Número de Questões",
+          "type": "integer",
+          "required": true,
+          "min": 1,
+          "max": 20,
+          "defaultValue": 5
+        },
+        {
+          "id": "time_limit",
+          "name": "Tempo Limite (minutos)",
+          "type": "integer",
+          "required": false,
+          "min": 5,
+          "max": 120,
+          "defaultValue": 30
+        },
+        {
+          "id": "question_types",
+          "name": "Tipos de Questões",
+          "type": "multiselect",
+          "options": [
+            "multiple_choice",
+            "true_false",
+            "open_ended"
+          ],
+          "required": true,
+          "defaultValue": ["multiple_choice"]
+        },
+        {
+          "id": "passing_score",
+          "name": "Pontuação Mínima para Aprovação",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 10,
+          "defaultValue": 7
+        }
+      ]
+    }
+  }
+  
