@@ -1,0 +1,37 @@
+{
+  "activityAnalytics": [
+    {
+      "inveniraStdID": "student_123",
+      "studentName": "Maria Oliveira",
+      "quantAnalytics": [
+        {
+          "id": "quiz_completion_rate",
+          "value": 100,
+          "timestamp": "2024-06-15T14:30:22Z"
+        },
+        {
+          "id": "average_score",
+          "value": 8.5,
+          "timestamp": "2024-06-15T14:30:22Z"
+        },
+        {
+          "id": "time_spent",
+          "value": 25.5,
+          "timestamp": "2024-06-15T14:30:22Z"
+        }
+      ],
+      "qualAnalytics": [
+        {
+          "id": "performance_profile",
+          "url": "https://quizplatform.com/analytics/profile/student_123",
+          "lastUpdated": "2024-06-15T14:30:22Z"
+        },
+        {
+          "id": "difficulty_heatmap",
+          "url": "https://quizplatform.com/analytics/heatmap/student_123",
+          "lastUpdated": "2024-06-15T14:30:22Z"
+        }
+      ]
+    }
+  ]
+}

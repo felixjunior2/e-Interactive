@@ -1,0 +1,46 @@
+{
+  "analyticsDefinitions": {
+    "quantitative": [
+      {
+        "id": "quiz_completion_rate",
+        "name": "Taxa de Conclusão do Quiz",
+        "description": "Percentual de estudantes que completaram o quiz",
+        "type": "percentage",
+        "calculationMethod": "total_completed / total_started * 100"
+      },
+      {
+        "id": "average_score",
+        "name": "Pontuação Média",
+        "description": "Média de pontuação de todos os estudantes",
+        "type": "score",
+        "range": {
+          "min": 0,
+          "max": 10
+        }
+      },
+      {
+        "id": "time_spent",
+        "name": "Tempo Médio de Realização",
+        "description": "Tempo médio gasto para completar o quiz",
+        "type": "duration",
+        "unit": "minutes"
+      }
+    ],
+    "qualitative": [
+      {
+        "id": "performance_profile",
+        "name": "Perfil de Desempenho",
+        "description": "Análise detalhada do desempenho do estudante",
+        "type": "detailed_report",
+        "dataSource": "individual_student_responses"
+      },
+      {
+        "id": "difficulty_heatmap",
+        "name": "Mapa de Dificuldades",
+        "description": "Visualização das questões mais desafiadoras",
+        "type": "heatmap",
+        "visualizationType": "color_intensity"
+      }
+    ]
+  }
+}

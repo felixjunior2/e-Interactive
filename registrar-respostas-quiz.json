@@ -1,0 +1,20 @@
+{
+  "user_url_info": {
+    "activityInstanceId": "unique_quiz_instance_identifier",
+    "accessUrl": "https://quizplatform.com/quiz/run/[INSTANCE_ID]",
+    "expirationTimestamp": "2024-06-30T23:59:59Z",
+    "allowedUsers": [
+      {
+        "inveniraStdID": "student_id_1",
+        "name": "João Silva",
+        "email": "joao.silva@example.com"
+      }
+    ],
+    "deploymentConfiguration": {
+      "attemptLimit": 3,
+      "timeLimit": 1800,  // 30 minutes in seconds
+      "startDate": "2024-06-01T00:00:00Z",
+      "endDate": "2024-06-30T23:59:59Z"
+    }
+  }
+}

@@ -1,0 +1,93 @@
+{
+"quiz": {
+"titulo": "Quiz Title",
+"perguntas": [
+{
+"texto": "Question Text",
+"tipo": "multiple_choice/true_false/open",
+"opcoes": ["Option 1", "Option 2", "Option 3", "Option 4"],
+"respostaCorreta": "...",
+"criterios": "..."
+}
+]
+},
+"provider_name": "Quiz Interativo",
+"activity_type": "quiz_config",
+"version": "1.0",
+"description": "Provedor de atividades de quiz interativo para 
+avaliação e acompanhamento de aprendizagem.",
+"configuration_fields": {
+"quiz_title": {
+"label": "Título do Quiz",
+"type": "string",
+"required": true,
+"max_length": 100
+},
+"question_count": {
+"label": "Número de Questões",
+"type": "integer",
+"required": true,
+"default": 5,
+"min": 1,
+"max": 20
+},
+"time_limit": {
+"label": "Tempo Limite (minutos)",
+"type": "integer",
+"required": true,
+"default": 30,
+"min": 5,
+"max": 120
+},
+"question_types": {
+"label": "Tipos de Questões Permitidos",
+"type": "list",
+"options": ["multiple_choice", "true_false", "open_ended"],
+"required": true,
+"default": ["multiple_choice"]
+},
+"passing_score": {
+"label": "Pontuação Mínima para Aprovação",
+"type": "float",
+"required": true,
+"default": 7.0,
+"min": 0.0,
+"max": 10.0
+},
+"attempt_limit": {
+"label": "Limite de Tentativas",
+"type": "integer",
+"required": false,
+"default": 3,
+"min": 1,
+"max": 10
+},
+"start_date": {
+"label": "Data de Início",
+"type": "datetime",
+"required": false
+},
+"end_date": {
+"label": "Data de Término",
+"type": "datetime",
+"required": false
+}
+},
+"api_endpoints": {
+"create_quiz": {
+"url": "https://e-interactive-1.onrender.com/registrar-quiz",
+"method": "POST",
+"description": "Registrar nova configuração de quiz"
+},
+"submit_answers": {
+"url": "https://e-interactive-1.onrender.com/registrar-respostasquiz",
+"method": "POST",
+"description": "Submeter respostas do usuário"
+},
+"get_analytics": 
+"url": "https://e-interactive-1.onrender.com/analytics-quiz",
+"method": "GET",
+"description": "Obter dados analíticos do quiz"
+}
+}
+} 
